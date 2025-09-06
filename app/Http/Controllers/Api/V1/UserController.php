@@ -31,19 +31,15 @@ class UserController extends Controller
                 ], 500);
             }
 
-            $token = null;
+        
             $message = null;
             if (!isset($data['id'])) {
-
-                // gera token Sanctum
-                $token = $user->createToken('auth_token')->plainTextToken;
                 $message = "Conta criada com sucesso";
             }
 
             return response()->json([
                 "message" => $message ?? "Conta actualizada com sucesso.",
                 "user" => new UserResource($user),
-                "token" => $token
             ], 201);
         } catch (\Throwable $th) {
             return response()->json([

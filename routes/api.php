@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CandidateController;
 use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Http\Request;
@@ -23,4 +24,12 @@ Route::controller(CandidateController::class)->middleware('auth:sanctum')->prefi
     route::get("get", "index")->name("show.program");
     route::post("store", "store")->name("store.program");
     route::post("delete", "destroy")->name("delete.program");
+});
+
+
+
+/**User Candidates Program */
+Route::controller(AuthController::class)->prefix("auth")->group(function () {
+    route::post("login", "login")->name("auth.login");
+    route::post("logout", "logout")->name("auth.logout")->middleware('auth:sanctum');
 });
