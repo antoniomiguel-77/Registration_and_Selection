@@ -41,6 +41,7 @@ php artisan key:generate
 
 # 4. Criar base de dados e migrar
 php artisan migrate --seed 
+php artisan db:seed ProgramSeed 
 
 # 5. Iniciar o servidor local
 php artisan serve
