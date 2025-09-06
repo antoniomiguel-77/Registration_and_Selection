@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CandidateProgramResource;
+use App\Repositories\CandidateProgramRepository;
 use Illuminate\Http\Request;
 
 class CandidateController extends Controller
@@ -10,56 +12,90 @@ class CandidateController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try {
+            $userId = auth()->id();
+            $programId = $request->program;
+
+            $applications = CandidateProgramRepository::getApplication($userId, $programId);
+
+
+
+            if ($applications) {
+                return response()->json([
+                    "message" => "Nenhuma candidatura encontrada",
+                    "programs" => []
+                ], 404);
+            }
+
+            $applications =  CandidateProgramResource::collection($applications);
+
+
+            return response()->json([
+                "programs" => $applications
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "error" => "Falha ao criar conta.",
+                "data" => $th->getMessage(),
+            ], 500);
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        try {
+
+            $program = CandidateProgramRepository::store($request->id);
+
+            if (!$program['status']) {
+                return response()->json([
+                    "message" => $program['message']
+                ], 400);
+            }
+
+            return response()->json([
+                "message" => $program['message']
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "error" => "Falha ao criar conta.",
+                "data" => $th->getMessage(),
+            ], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        try {
+
+            $application = CandidateProgramRepository::destroy(auth()->id(), $request->id);
+
+            if (!$application) {
+                return response()->json([
+                    "message" => "Candidatura não encontrada."
+                ], 400);
+            }
+
+            return response()->json([
+                "message" => "Sua Candidatura foi cancelada com sucesso"
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "error" => "Falha ao criar conta.",
+                "data" => $th->getMessage(),
+            ], 500);
+        }
     }
 }

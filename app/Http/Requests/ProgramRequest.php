@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProgramRequest extends FormRequest
 {
@@ -22,7 +23,13 @@ class ProgramRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "name"=>[
+                "required",
+                "min:3",
+                 Rule::unique('programs', 'name')->ignore($this->id)
+            ],
+            "start"=>"required",
+            "end"=>"required"
         ];
     }
 }

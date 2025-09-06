@@ -46,4 +46,13 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+
+    public function programs()
+    {
+        // muitos-para-muitos via candidate_programs
+        return $this->belongsToMany(Program::class, 'candidate_programs')
+            ->withTimestamps()
+            ->withPivot('deleted_at'); // se quiser usar soft deletes no pivot
+    }
 }
