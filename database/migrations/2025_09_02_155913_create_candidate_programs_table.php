@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Candidate;
 use App\Models\Program;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;

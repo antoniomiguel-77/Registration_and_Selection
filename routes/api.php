@@ -12,8 +12,8 @@ Route::get('/user', function (Request $request) {
 
 /**User Routes */
 Route::controller(UserController::class)->prefix("user")->group(function () {
-    route::post("store", "index")->name("store.user");
-    route::get("find", "store")->name("show.user")->middleware('auth:sanctum');
+    route::post("store", "store")->name("store.user");
+    route::get("find", "show")->name("show.user")->middleware('auth:sanctum');
     route::post("delete", "destroy")->name("delete.user")->middleware('auth:sanctum');
 });
 

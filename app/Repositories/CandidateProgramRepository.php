@@ -16,7 +16,7 @@ class CandidateProgramRepository
 
 
     /**  Candidatar-se */
-    public static function store(int $programId)
+    public static function store(int $programId, User $user)
     {
         try {
             $program = Program::findOrFail($programId);
@@ -32,7 +32,7 @@ class CandidateProgramRepository
 
 
             /** Criar a candidatura */
-            $isTrue = self::saveApplication(auth()->id(), $program);
+            $isTrue = self::saveApplication($user->id, $program);
 
             if (!$isTrue) {
                 return [
@@ -43,7 +43,7 @@ class CandidateProgramRepository
 
             return [
                 "status" => true,
-                "message" => "candidatura Efetuada com sucesso."
+                "message" => "Sr(a), ".$user->name." sua candidatura foi Efetuada com sucesso."
             ];
         } catch (\Throwable $th) {
             Log::error("errors", [
@@ -57,7 +57,7 @@ class CandidateProgramRepository
 
     /** Setar a candidatura */
 
-    private function saveApplication(int $user, Program $program)
+    private static function saveApplication(int $user, Program $program)
     {
         try {
 
@@ -104,10 +104,10 @@ class CandidateProgramRepository
 
 
     /** Cancelar candidaturas do utilizador */
-    public static function destroy(int $user, int $program)
+    public static function destroy(User $user, int $program)
     {
         try {
-            $query = CandidateProgram::query()->where('user_id', $user)
+            $query = CandidateProgram::query()->where('user_id', $user->id)
                 ->where('program_id', $program)
                 ->first();
 

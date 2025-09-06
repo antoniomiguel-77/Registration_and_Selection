@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CandidateRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class CandidateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,19 @@ class CandidateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'program' => [
+                'required',
+                Rule::unique('candidate_programs', 'program_id')
+                    ->where(fn($query) => $query->where('user_id', auth()->id())),
+            ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'program.required' => "Informe o Identificador do programa que pretende se candidatar.",
+            'program.unique'   => "Sr(a) {$this->user()->name}, já está inscrito neste programa.",
         ];
     }
 }

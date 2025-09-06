@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CandidateRequest;
 use App\Http\Resources\CandidateProgramResource;
 use App\Repositories\CandidateProgramRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CandidateController extends Controller
 {
@@ -22,7 +24,7 @@ class CandidateController extends Controller
 
 
 
-            if ($applications) {
+            if (!$applications) {
                 return response()->json([
                     "message" => "Nenhuma candidatura encontrada",
                     "programs" => []
@@ -36,6 +38,10 @@ class CandidateController extends Controller
                 "programs" => $applications
             ], 200);
         } catch (\Throwable $th) {
+            Log::error("errors", [
+                "error" => $th->getMessage(),
+                "line" => $th->getLine()
+            ]);
             return response()->json([
                 "error" => "Falha ao criar conta.",
                 "data" => $th->getMessage(),
@@ -48,12 +54,15 @@ class CandidateController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CandidateRequest $request)
     {
+     
         try {
-
-            $program = CandidateProgramRepository::store($request->id);
-
+            $user = $request->user();
+            $program = CandidateProgramRepository::store($request->program,$user);
+            Log::info('info',[
+                'info'=>$program
+            ]);
             if (!$program['status']) {
                 return response()->json([
                     "message" => $program['message']
@@ -64,6 +73,10 @@ class CandidateController extends Controller
                 "message" => $program['message']
             ], 200);
         } catch (\Throwable $th) {
+            Log::error("errors", [
+                "error" => $th->getMessage(),
+                "line" => $th->getLine()
+            ]);
             return response()->json([
                 "error" => "Falha ao criar conta.",
                 "data" => $th->getMessage(),
@@ -79,8 +92,8 @@ class CandidateController extends Controller
     public function destroy(Request $request)
     {
         try {
-
-            $application = CandidateProgramRepository::destroy(auth()->id(), $request->id);
+            $user = $request->user();
+            $application = CandidateProgramRepository::destroy($user, $request->program);
 
             if (!$application) {
                 return response()->json([
@@ -89,11 +102,11 @@ class CandidateController extends Controller
             }
 
             return response()->json([
-                "message" => "Sua Candidatura foi cancelada com sucesso"
+                "message" => "Sr(a), ".$user->name." Sua Candidatura foi cancelada com sucesso."
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
-                "error" => "Falha ao criar conta.",
+                "error" => "Falha ao realizar operação.",
                 "data" => $th->getMessage(),
             ], 500);
         }
