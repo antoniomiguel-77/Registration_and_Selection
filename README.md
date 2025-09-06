@@ -44,3 +44,9 @@ php artisan migrate --seed
 
 # 5. Iniciar o servidor local
 php artisan serve
+
+## ⚙️ Acessos Demo
+# 1. email
+ john@doe.com
+# 2. password
+ password
