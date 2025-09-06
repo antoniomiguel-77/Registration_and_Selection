@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 class CandidateController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Lista de Candidaturas.
      */
     public function index(Request $request)
     {
@@ -52,7 +52,7 @@ class CandidateController extends Controller
 
 
     /**
-     * Store a newly created resource in storage.
+     *  Candidatar-se
      */
     public function store(CandidateRequest $request)
     {
@@ -87,7 +87,7 @@ class CandidateController extends Controller
 
 
     /**
-     * Remove the specified resource from storage.
+     * Cancelar Candidatura.
      */
     public function destroy(Request $request)
     {

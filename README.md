@@ -51,3 +51,6 @@ php artisan serve
  john@doe.com
 # 2. password
  password
+
+## Link da documentação usando Scrumble 
+# 1. http://127.0.0.1:8000/docs/api#/operations/auth.login

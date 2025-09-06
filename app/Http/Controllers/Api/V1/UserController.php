@@ -13,7 +13,7 @@ class UserController extends Controller
 
 
     /**
-     * Store a newly created resource in storage.
+     * Criar Conta.
      */
     public function store(UserRequest $request)
     {
@@ -50,7 +50,7 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Buscar Conta.
      */
     public function show(Request $request)
     {
@@ -77,7 +77,7 @@ class UserController extends Controller
 
 
     /**
-     * Remove the specified resource from storage.
+     * Excluir Conta.
      */
     public function destroy(Request $request)
     {
